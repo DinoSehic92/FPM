@@ -68,6 +68,15 @@ namespace Avalon.ViewModels
             set { currentFavorite = value; OnPropertyChanged("CurrentFavorite"); ProjectsVM.FilterFavorite(currentFavorite); }
         }
 
+        private Tuple<int, string> favPage = null;
+        public Tuple<int, string> FavPage
+        {
+            get { return favPage; }
+            set { favPage = value; OnPropertyChanged("FavPage"); }
+        }
+
+
+
         private ObservableCollection<string> groups = new ObservableCollection<string>() {};
         public ObservableCollection<string> Groups
         {
@@ -278,6 +287,45 @@ namespace Avalon.ViewModels
         {
             ProjectsVM.RemoveFavorite();
             CurrentFavorite = CurrentFavorite;
+        }
+
+        public void SelectFavPage(Tuple<int, string> page)
+        {
+            if (page != null)
+            {
+                FavPage = page;
+                PreviewVM.RequestPage1 = page.Item1;
+            }
+        }
+
+        public void AddFavPage(string pageName)        
+        {   
+            if (PreviewVM.CurrentFile != null)
+            {
+                int pageNr = PreviewVM.CurrentPage1;
+                Tuple<int, string> pageData = Tuple.Create(pageNr, pageName);
+                ProjectsVM.CurrentFile.FavPages.Add(pageData);
+            }
+        }
+
+        public void RenameFavPage(string name)
+        {
+            if (FavPage != null)
+            {
+                int pageNr = FavPage.Item1;
+                FavPage = Tuple.Create(pageNr, name);
+            }
+        }
+
+        public void RemoveFavPage()
+        {
+            if (Favorites.Count > 1)
+            {
+                ProjectsVM.RemoveFavoriteGroup(CurrentFavorite);
+                Favorites.Remove(CurrentFavorite);
+
+                CurrentFavorite = Favorites.First();
+            }
         }
 
 

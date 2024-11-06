@@ -38,6 +38,8 @@ public partial class MainView : UserControl, INotifyPropertyChanged
         TrayGrid.AddHandler(DataGrid.SelectionChangedEvent, set_preview_request_tray);
         FavoriteGroups.AddHandler(ListBox.SelectionChangedEvent, OnFavoriteGroupChanged);
 
+        FavPages.AddHandler(DataGrid.SelectionChangedEvent, OnSelectFavPage);
+
         Lockedstatus.AddHandler(ToggleSwitch.IsCheckedChangedEvent, on_lock);
         FileGrid.AddHandler(DataGrid.LoadedEvent, init_startup);
         PreviewToggle.AddHandler(ToggleSwitch.IsCheckedChangedEvent, on_toggle_preview);
@@ -648,6 +650,24 @@ public partial class MainView : UserControl, INotifyPropertyChanged
 
         ctx.RenameFavGroup(NewFavGroupInput.Text);
         NewFavGroupInput.Clear();
+    }
+
+    private void OnSelectFavPage(object sender, RoutedEventArgs e)
+    {
+        Tuple<int, string> page = (Tuple<int, string>)FavPages.SelectedItem;
+        ctx.SelectFavPage(page);
+    }
+
+    private void OnAddFavPage(object sender, RoutedEventArgs e)
+    {
+        ctx.AddFavPage(FavPageInput.Text);
+        FavPageInput.Clear();
+    }
+
+    private void OnRenameFavPage(object sender, RoutedEventArgs e)
+    {
+        ctx.RenameFavPage(FavPageInput.Text);
+        FavPageInput.Clear();
     }
 
 
